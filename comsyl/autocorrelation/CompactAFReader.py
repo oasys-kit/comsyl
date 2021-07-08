@@ -359,6 +359,25 @@ class CompactAFReader(object):
 
         return Wx1x2,Wy1y2
 
+    def get_wavefront(self,mode_index=0,normalize_with_eigenvalue=True):
+
+        if mode_index >= self.number_modes():
+            raise Exception("Mode index greater than number of modes.")
+
+        if normalize_with_eigenvalue:
+            z_array = np.sqrt(np.abs(self.eigenvalue(mode_index))) * self.mode(mode_index)
+        else:
+            z_array = self.mode(mode_index)
+
+        input_wavefront = GenericWavefront2D.initialize_wavefront_from_arrays(self.x_coordinates(),
+                                                                              self.y_coordinates(),
+                                                                              z_array,
+                                                                              z_array_pi=None,
+                                                                              wavelength=1e-10)
+        input_wavefront.set_photon_energy(self.photon_energy())
+
+        return input_wavefront
+
     # def __WW(self,wf):
     #
     #     WF = wf.get_complex_amplitude()
@@ -416,6 +435,11 @@ class CompactAFReader(object):
 
 if __name__ == "__main__":
 
-    filename = "/users/srio/Working/paper-hierarchical/CODE-COMSYL/propagation_wofry_EBS/rediagonalized.npz"
+    filename = "/scisoft/users/srio/COMSYL-SLURM/comsyl/comsyl-submit/calculations/id18_ebs_u18_2500mm_s6.0.npz"
     af = CompactAFReader.initialize_from_file(filename)
     print(af.info())
+
+
+    wf0 = af.get_wavefront(mode_index=10)
+    from srxraylib.plot.gol import plot_image
+    plot_image(wf0.get_intensity(), wf0.get_coordinate_x(), wf0.get_coordinate_y(),)

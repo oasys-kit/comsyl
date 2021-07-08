@@ -40,7 +40,7 @@ class ComsylWofryBeamlineElement(BeamlineElement):
 if __name__ == "__main__":
 
     from syned.beamline.element_coordinates import ElementCoordinates
-    from wofry.beamline.optical_elements.ideal_elements.screen import WOScreen
+    from wofryimpl.beamline.optical_elements.ideal_elements.screen import WOScreen
     a = ComsylWofryBeamlineElement(
                 optical_element=WOScreen(),
                 coordinates=ElementCoordinates(p=0.0,q=28.3,angle_radial=0.0,angle_azimuthal=0.0),
@@ -48,6 +48,7 @@ if __name__ == "__main__":
                 propagator_specific_parameters={'shift_half_pixel':1,'magnification_x':8.0,'magnification_y':8.0}
     )
 
+    # a = ComsylWofryBeamlineElement()
 
     print(a.info())
 
@@ -58,8 +59,10 @@ if __name__ == "__main__":
     f.close()
     print("File written to disk: tmp.json")
 
-    from json_tools import load_from_json_file
+    from syned.util.json_tools import load_from_json_file
 
-    tmp = load_from_json_file("tmp.json")
+    tmp = load_from_json_file("tmp.json", exec_commands=[ \
+        "from comsyl.waveoptics.ComsylWofryBeamlineElement import ComsylWofryBeamlineElement", \
+        "from wofryimpl.beamline.optical_elements.ideal_elements.screen import WOScreen",])
 
     print(tmp)
