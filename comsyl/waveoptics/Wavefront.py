@@ -486,7 +486,7 @@ class NumpyWavefront(Wavefront):
             else:
                dim_x = self.dim_x()
             
-            new_x = np.linspace(x_min, x_max, dim_x * resample_x)
+            new_x = np.linspace(x_min, x_max, int(dim_x * resample_x))
         else:
             new_x = fixed_x_coordinates
 
@@ -500,7 +500,7 @@ class NumpyWavefront(Wavefront):
             else:
                dim_y = self.dim_y()
 
-            new_y = np.linspace(y_min, y_max, dim_y * resample_y)
+            new_y = np.linspace(y_min, y_max, int(dim_y * resample_y))
         else:
             new_y = fixed_y_coordinates
 
